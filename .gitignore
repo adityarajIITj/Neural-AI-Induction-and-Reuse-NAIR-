@@ -1,0 +1,16 @@
+# Virtual environment & caches
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+
+# Sensitive implementation plans & confidential specs
+IMPLEMENTATION_PLAN.md
+implementation_plan.md
+*implementation_plan*.md
+*IMPLEMENTATION_PLAN*.md
+*implementation_plan*
+*IMPLEMENTATION_PLAN*

@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ssnn-research-harness"
+version = "0.1.0"
+description = "Auditable experiments on learned computational units and compositional generalization"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.24", "torch>=2.1", "PyYAML>=6.0"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
