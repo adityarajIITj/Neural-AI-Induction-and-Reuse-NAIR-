@@ -1,0 +1,22 @@
+{
+  "run_id": "test_affine_20261010_184256",
+  "family": "affine",
+  "n_ops": 12,
+  "n_states": 11,
+  "steps": 100,
+  "seeds": [
+    0
+  ],
+  "device": "cpu",
+  "models": [
+    "mlp",
+    "shared",
+    "explicit",
+    "library",
+    "soft_library",
+    "hypernet"
+  ],
+  "hidden": 64,
+  "batch_size": 128,
+  "train_per_program": 24
+}
