@@ -119,6 +119,14 @@ class Family:
                 return False
         return True
 
+    def describe(self) -> str:
+        """Return a formatted string describing the task family properties."""
+        all_bijective = all(len(np.unique(self.tables[op])) == self.n_states for op in range(self.n_ops))
+        return (
+            f"Family(name='{self.name}', n_states={self.n_states}, n_ops={self.n_ops}, "
+            f"all_bijective={all_bijective})"
+        )
+
 
 @dataclass
 class Split:
