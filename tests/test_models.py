@@ -74,3 +74,15 @@ def test_fixed_seed_reproducibility():
     out2 = m2(prog, x, lengths)
     
     assert torch.equal(out1, out2)
+
+def test_get_model_summary():
+    from ssnn.models import get_model_summary
+    f = make_family("affine", 11)
+    for kind in ["mlp", "shared", "explicit", "library", "soft_library", "hypernet"]:
+        m = build_model(kind, f.n_ops, f.n_states, hidden=16)
+        summary = get_model_summary(m)
+        assert "class_name" in summary
+        assert "mode" in summary
+        assert summary["total_trainable_params"] > 0
+        assert summary["n_ops"] == 12
+        assert summary["n_states"] == 11
