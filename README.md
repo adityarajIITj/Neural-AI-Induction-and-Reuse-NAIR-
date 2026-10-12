@@ -73,7 +73,28 @@ python scripts/aggregate_pilot_results.py
 
 ---
 
-## 6. Project Documentation
+## 6. Pilot Benchmark Summary
+
+Empirical pilot results across 3 random seeds ($S \in \{0, 1, 2\}$) for 500 optimization steps:
+
+| Family | Model Architecture | Train Params | Active Params / Step | Strict Functional Holdout | Depth-4 Extrapolation |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **`affine`** | `Explicit` (Modular Control) | 27,012 | 2,251 | **100.0%** $\pm 0.0\%$ | **100.0%** $\pm 0.0\%$ |
+| | `HyperNet` (Dynamic Gen.) | 12,907 | 12,907 | **82.2%** $\pm 1.8\%$ | **68.8%** $\pm 1.6\%$ |
+| | `Soft_Library` (Soft MoE) | 13,578 | 13,578 | 24.8% $\pm 2.2\%$ | 19.9% $\pm 0.5\%$ |
+| | `Library` (Discrete ST) | 13,578 | 2,323 | 15.3% $\pm 1.2\%$ | 16.5% $\pm 0.8\%$ |
+| | `Shared` (Recurrent Step) | 2,251 | 2,251 | 9.4% $\pm 1.8\%$ | 8.9% $\pm 0.5\%$ |
+| | `MLP` (Monolithic Baseline) | 8,715 | 8,715 | 7.6% $\pm 1.3\%$ | 9.4% $\pm 0.6\%$ |
+| **`permutation`** | `Explicit` (Modular Control) | 34,752 | 2,896 | **99.4%** $\pm 0.4\%$ | **96.0%** $\pm 0.6\%$ |
+| | `HyperNet` (Dynamic Gen.) | 18,432 | 18,432 | **48.6%** $\pm 8.3\%$ | **36.2%** $\pm 2.9\%$ |
+| | `Soft_Library` (Soft MoE) | 17,448 | 17,448 | 20.7% $\pm 2.9\%$ | 15.3% $\pm 1.5\%$ |
+| | `Library` (Discrete ST) | 17,448 | 2,968 | 17.7% $\pm 1.9\%$ | 14.3% $\pm 1.5\%$ |
+| | `Shared` (Recurrent Step) | 2,896 | 2,896 | 7.8% $\pm 0.4\%$ | 6.9% $\pm 0.5\%$ |
+| | `MLP` (Monolithic Baseline) | 9,360 | 9,360 | 5.0% $\pm 0.5\%$ | 8.8% $\pm 0.2\%$ |
+
+---
+
+## 7. Project Documentation
 
 - [`docs/task_generator_validation.md`](docs/task_generator_validation.md): Mathematical proofs, collision rates, and leakage audit.
 - [`docs/experimental_protocol.md`](docs/experimental_protocol.md): Pre-registered success criteria and evaluation gates.
@@ -83,6 +104,19 @@ python scripts/aggregate_pilot_results.py
 
 ---
 
-## 7. License
+## 8. Citation
+
+```bibtex
+@misc{raj2026nair,
+  title={Neural AI Induction and Reuse (NAIR): Auditable Experiments on Learned Computational Units},
+  author={Aditya Raj},
+  year={2026},
+  url={https://github.com/adityarajIITj/Neural-AI-Induction-and-Reuse-NAIR-}
+}
+```
+
+---
+
+## 9. License
 
 Licensed under the [MIT License](LICENSE).
