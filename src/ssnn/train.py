@@ -8,13 +8,16 @@ import torch.nn.functional as F
 from .accounting import count_params, count_active_params, estimate_train_flops, estimate_forward_flops
 from .tasks import batchify, Family
 
+ExampleRow = Tuple[Tuple[int, ...], int, int]
+EvalResult = Dict[str, float]
+
 def evaluate_detailed(
     model: torch.nn.Module,
-    rows: List[Tuple[Tuple[int, ...], int, int]],
+    rows: List[ExampleRow],
     family: Family,
     device: torch.device,
     batch_size: int = 512,
-) -> Dict[str, float]:
+) -> EvalResult:
     """Evaluate both per-example accuracy and whole-program exact-match accuracy.
 
     All metrics are computed strictly from model forward outputs.
