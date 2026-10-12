@@ -196,3 +196,16 @@ def build_model(
         return StepModel(n_ops, n_states, hidden=hidden, mode="hypernet")
     else:
         raise ValueError(f"Unknown model kind: {kind}")
+
+
+def get_model_summary(model: nn.Module) -> dict:
+    """Return dictionary summary of model parameters, class name, and architecture mode."""
+    total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    mode = getattr(model, "mode", "monolithic" if isinstance(model, MonolithicMLP) else "unknown")
+    return {
+        "class_name": model.__class__.__name__,
+        "mode": mode,
+        "total_trainable_params": total_params,
+        "n_ops": getattr(model, "n_ops", None),
+        "n_states": getattr(model, "n_states", None),
+    }
