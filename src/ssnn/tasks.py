@@ -89,6 +89,11 @@ class Family:
 
     def run(self, program: Tuple[int, ...] | List[int], x: np.ndarray | List[int] | int) -> np.ndarray:
         """Execute a sequence of operation tokens sequentially from left to right."""
+        if isinstance(x, int):
+            val = int(x)
+            for op in program:
+                val = int(self.tables[int(op), val])
+            return np.array([val], dtype=np.int64)
         y = np.asarray(x, dtype=np.int64).copy()
         for op in program:
             y = self.tables[int(op), y]
