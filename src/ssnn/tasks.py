@@ -74,12 +74,21 @@ def permutation_ref(op_idx: int, x: np.ndarray, n_states: int = 16) -> np.ndarra
 
 @dataclass(frozen=True)
 class Family:
+    """Represents a finite-state transformation family over a bounded integer domain.
+
+    Attributes:
+        name: Identifier of the task family ('affine' or 'permutation').
+        n_states: Total discrete cardinality of the state domain (S).
+        n_ops: Number of primitive operations available in the vocabulary.
+        tables: Lookup tensor of shape [n_ops, n_states] mapping (op, state) -> next_state.
+    """
     name: str
     n_states: int
     n_ops: int
     tables: np.ndarray  # [operation, state] -> state
 
     def run(self, program: Tuple[int, ...] | List[int], x: np.ndarray | List[int] | int) -> np.ndarray:
+        """Execute a sequence of operation tokens sequentially from left to right."""
         y = np.asarray(x, dtype=np.int64).copy()
         for op in program:
             y = self.tables[int(op), y]
@@ -113,6 +122,11 @@ class Family:
 
 @dataclass
 class Split:
+    """Encapsulates partitioned program sets ensuring strict leakage separation.
+
+    Separates token-pair holdouts from true functional holdouts, and provides
+    distinct sets for training, validation, and multi-slice evaluation.
+    """
     train_programs: list[tuple[int, ...]]
     seen_test_programs: list[tuple[int, ...]]
     unseen_test_programs: list[tuple[int, ...]]
@@ -126,6 +140,7 @@ class Split:
 
 
 def make_family(name: str = "affine", n_states: int = 11) -> Family:
+    """Construct a validated Family instance ('affine' or 'permutation')."""
     if name == "affine":
         x = np.arange(n_states, dtype=np.int64)
         funcs = [
