@@ -74,3 +74,7 @@ def estimate_train_flops(model: nn.Module, batch_size: int, steps: int, task_dep
     """
     fwd_per_step = estimate_forward_flops(model, batch_size, task_depth, kind)
     return int(steps * 3 * fwd_per_step)
+
+def estimate_inference_flops(model: nn.Module, batch_size: int, task_depth: int = 3, kind: str = "mlp") -> int:
+    """Estimate total forward inference FLOPs for an evaluation sequence of length task_depth."""
+    return estimate_forward_flops(model, batch_size, task_depth, kind)
