@@ -40,3 +40,14 @@ def test_strict_functional_holdout_is_non_empty():
         s = make_split(f, seed=0)
         assert len(s.strict_functional_holdout_programs) > 0, f"No strict functional holdouts found in {fam_name}"
         assert s.stats["n_strict_functional_holdout"] > 0
+
+def test_split_stats_completeness():
+    f = make_family("affine", 11)
+    s = make_split(f, seed=1)
+    required_keys = [
+        "family", "n_ops", "n_states", "n_train_programs",
+        "n_train_unique_signatures", "n_test_heldout_pairs",
+        "n_val_heldout_pairs", "n_seen_test_programs"
+    ]
+    for k in required_keys:
+        assert k in s.stats, f"Missing key {k} in split.stats"
