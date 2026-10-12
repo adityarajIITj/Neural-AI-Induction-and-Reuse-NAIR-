@@ -15,16 +15,19 @@ from ssnn.models import build_model
 from ssnn.train import train, evaluate_detailed, set_seed
 
 def main():
-    ap = argparse.ArgumentParser(description="SSNN Research Harness - Compositional Experiment Runner")
-    ap.add_argument("--family", default="affine", choices=["affine", "permutation"])
-    ap.add_argument("--steps", type=int, default=500)
-    ap.add_argument("--seeds", type=int, nargs="+", default=[0])
-    ap.add_argument("--device", default="auto", choices=["auto", "cpu", "cuda"])
-    ap.add_argument("--models", nargs="+", default=["mlp", "shared", "explicit", "library", "soft_library", "hypernet"])
-    ap.add_argument("--hidden", type=int, default=64)
-    ap.add_argument("--batch-size", type=int, default=128)
-    ap.add_argument("--train-per-program", type=int, default=24)
-    ap.add_argument("--tag", default="pilot")
+    ap = argparse.ArgumentParser(
+        description="NAIR Research Harness - Compositional Experiment Runner",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    ap.add_argument("--family", default="affine", choices=["affine", "permutation"], help="Deterministic task family to evaluate")
+    ap.add_argument("--steps", type=int, default=500, help="Number of training optimization steps")
+    ap.add_argument("--seeds", type=int, nargs="+", default=[0], help="List of random seeds for multi-run replication")
+    ap.add_argument("--device", default="auto", choices=["auto", "cpu", "cuda"], help="Computation device (auto detects CUDA)")
+    ap.add_argument("--models", nargs="+", default=["mlp", "shared", "explicit", "library", "soft_library", "hypernet"], help="Subset of model architectures to train")
+    ap.add_argument("--hidden", type=int, default=64, help="Hidden dimension size for linear layers")
+    ap.add_argument("--batch-size", type=int, default=128, help="Batch size for stochastic gradient steps")
+    ap.add_argument("--train-per-program", type=int, default=24, help="Number of sampled input states per training program")
+    ap.add_argument("--tag", default="pilot", help="Identifier prefix for saving run directories")
     args = ap.parse_args()
 
     if args.device == "cuda" and not torch.cuda.is_available():
