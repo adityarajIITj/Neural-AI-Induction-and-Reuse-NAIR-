@@ -1,41 +1,88 @@
-# Self-Structuring Neural Networks — Research Harness
+# Neural AI Induction and Reuse (NAIR) — Research Harness
 
-This is a small, auditable starting point for testing whether learned computational units generalize to held-out compositions. It is **not** evidence of novelty or compute efficiency.
+A transparent, auditable experimental testbed for evaluating whether learned computational units generalize to held-out compositions, with rigorous truth-table signature tracking and compute accounting.
 
-## First experiment
+---
 
-A deterministic task family defines transformations over a finite state space. Each example supplies an operation sequence and an input state; the target is the result of executing the sequence. Some ordered operation pairs are held out from training and used to test compositional generalization.
+## 1. Research Question
 
-Included models:
-- `MonolithicMLP`: fixed-depth feed-forward baseline; receives a program encoding and input.
-- `SharedStepModel`: applies one shared learned transformation conditioned on each operation token.
-- `ExplicitStepModel`: operation-specific learned transformation modules (an upper-bound-style modular control, but roles are not guaranteed to match ground-truth operations).
-- `LearnedLibraryModel`: shared bank of learned units with a learned operation-to-unit router.
+> **Can learned computational units compose on genuinely held-out functions and combinations without joint retraining, and does any observed advantage survive fair parameter, compute, and inference controls?**
 
-The learned-library model is a research candidate, not a claimed novel architecture. The task family is intentionally small and synthetic.
+---
 
-## Setup
+## 2. Implemented Model Architectures
+
+The harness compares six model paradigms under strictly documented parameter and FLOP conventions:
+
+| Architecture | Paradigm | Parameter Role |
+| :--- | :--- | :--- |
+| **`MonolithicMLP`** | Fixed Feed-Forward | Sequence-level monolithic control receiving the full zero-masked program encoding and state. |
+| **`SharedStepModel`** | Recurrent Shared Step | Single non-linear transformation unit reused across every program step, conditioned on operation tokens. |
+| **`ExplicitStepModel`** | Supervised Modular Control | Dedicated module per operation ($M = n_{ops}$); serves as an empirical upper-bound modular control. |
+| **`LearnedLibraryModel`** | Discrete Modular Bank | Bank of $M = \lceil n_{ops} / 2 \rceil$ reusable units with straight-through discrete learned routing logits. |
+| **`SoftLibraryModel`** | Continuous Mixture of Experts | Continuous soft mixture with softmax routing probabilities ([Rosenbaum et al., 2018](docs/novelty_matrix.md)). |
+| **`HyperNetStep`** | Dynamic Parameter Generation | Operation embeddings generate the linear transformation weights dynamically ([Ha et al., 2016](docs/novelty_matrix.md)). |
+
+---
+
+## 3. Deterministic Task Families
+
+1. **`affine` ($S=11$, 12 ops):**
+   - Bijections over $\mathbb{Z}_{11}$: rotations, reflections, multipliers, and offsets.
+   - Ground truth affine permutation group $AGL(1, \mathbb{Z}_{11})$ containing 110 distinct functions.
+2. **`permutation` ($S=16$, 12 ops):**
+   - Non-linear 4-bit cryptographic permutations: PRESENT cipher S-box, inverse S-box, bit reversals, bitwise XORs, adjacent bit swaps, and cyclic shifts.
+   - Spans **1,232 distinct functional signatures** at depth 3, establishing a collision-resistant composition benchmark.
+
+---
+
+## 4. Truth-Table Signature & Leakage Isolation
+
+A held-out token pair is not necessarily a held-out function. In finite state spaces, sequences can collapse to identical mappings:
+$$\text{signature}(P) = (F(0), F(1), \dots, F(S-1))$$
+
+To prevent spurious generalization claims, our split partitions test sequences into:
+- **Strict Functional Holdouts**: Sequences containing held-out pairs whose truth table was **never seen in training**.
+- **Functionally Leaked Compositions**: Sequences containing held-out pairs whose mathematical truth table **was already present in training**.
+
+---
+
+## 5. Setup & Quickstart
 
 ```bash
+# Setup virtual environment
 python -m venv .venv
-# Linux/macOS
-source .venv/bin/activate
-# Windows PowerShell: .venv\Scripts\Activate.ps1
+# Activate (Windows: .venv\Scripts\Activate.ps1 | Linux: source .venv/bin/activate)
 pip install -e '.[dev]'
-pytest -q
+
+# Run the full test suite
+pytest -v
 ```
 
-## Run
-
+### Running Experiments
 ```bash
+# Single pilot on affine family
 python scripts/run_experiment.py --family affine --steps 500 --seeds 0
+
+# Multi-seed pilot on permutation family
+python scripts/run_experiment.py --family permutation --steps 500 --seeds 0 1 2
+
+# Aggregate and compare all pilot results
+python scripts/aggregate_pilot_results.py
 ```
 
-Use `--device cpu` to force CPU or `--device cuda` if CUDA is available. The script prints and saves the actual device, model parameter count, an estimated matrix-operation FLOP count, wall time, and category-level exact accuracy. The FLOP estimate counts linear-layer matrix operations for forward/backward passes and is explicitly incomplete: it does not count elementwise ops, optimizer updates, data generation, or evaluation.
+---
 
-## Scientific cautions
+## 6. Project Documentation
 
-- Held-out token pairs are not automatically functionally novel; transformations can be equivalent. The generator reports pair holdouts, but stronger studies should additionally filter programs by functional equivalence over the complete finite input state space.
-- A modular model may have a different inductive bias from a monolithic baseline. Match parameters and optimization budgets before interpreting results.
-- One seed and a toy benchmark are a smoke/pilot only. Run multiple seeds and at least one second task family before making claims.
-- Lower peak memory is not lower training FLOPs. Report training cost, inference cost, parameter count, and quality separately.
+- [`docs/task_generator_validation.md`](docs/task_generator_validation.md): Mathematical proofs, collision rates, and leakage audit.
+- [`docs/experimental_protocol.md`](docs/experimental_protocol.md): Pre-registered success criteria and evaluation gates.
+- [`docs/novelty_matrix.md`](docs/novelty_matrix.md): Mechanism-level comparison to prior art (NMN, HyperNetworks, Soft Modular Networks, DreamCoder).
+- [`docs/research_ledger.md`](docs/research_ledger.md): Persistent ledger of confirmed findings and open questions.
+- [`docs/decision_memo.md`](docs/decision_memo.md): Phase 4 decision memo analyzing pilot outcomes.
+
+---
+
+## 7. License
+
+Licensed under the [MIT License](LICENSE).
