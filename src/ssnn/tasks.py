@@ -264,6 +264,9 @@ def make_split(
     depth4_extrapolation = d4_all[:max_d4_eval]
 
     stats = {
+        "family": family.name,
+        "n_ops": family.n_ops,
+        "n_states": family.n_states,
         "n_train_programs": len(train_programs),
         "n_train_unique_signatures": len(train_signatures),
         "n_test_heldout_pairs": len(test_heldout_pairs),
