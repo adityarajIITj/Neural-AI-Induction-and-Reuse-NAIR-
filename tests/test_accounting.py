@@ -23,3 +23,11 @@ def test_active_parameters_distinction_for_explicit():
     total_p = count_params(m_exp)
     active_p = count_active_params(m_exp, "explicit")
     assert total_p > active_p, "Explicit modular model should have active_params < total_params"
+
+def test_inference_flops_matches_forward_flops():
+    from ssnn.accounting import estimate_inference_flops
+    m = build_model("shared", 12, 11, hidden=16)
+    fwd = estimate_forward_flops(m, batch_size=8, task_depth=4, kind="shared")
+    inf = estimate_inference_flops(m, batch_size=8, task_depth=4, kind="shared")
+    assert fwd == inf
+    assert inf > 0
