@@ -108,10 +108,14 @@ def train(
             losses.append(float(loss.detach().cpu()))
 
     elapsed = time.time() - start
+    initial_loss = losses[0] if losses else None
+    final_loss = losses[-1] if losses else None
 
     return {
         "seconds": elapsed,
         "loss_samples": losses,
+        "initial_loss": initial_loss,
+        "final_loss": final_loss,
         "params": count_params(model),
         "active_params": count_active_params(model, model_kind),
         "estimated_train_flops": estimate_train_flops(model, batch_size, steps, task_depth=3, kind=model_kind),
