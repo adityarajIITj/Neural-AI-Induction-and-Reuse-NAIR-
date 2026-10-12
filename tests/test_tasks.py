@@ -55,3 +55,20 @@ def test_sampling_is_reproducible():
     a = sample_examples(f, s.train_programs[:3], per_program=5, seed=10)
     b = sample_examples(f, s.train_programs[:3], per_program=5, seed=10)
     assert a == b
+
+def test_family_describe():
+    f_aff = make_family("affine", 11)
+    desc_aff = f_aff.describe()
+    assert "affine" in desc_aff
+    assert "all_bijective=True" in desc_aff
+
+    f_perm = make_family("permutation", 16)
+    desc_perm = f_perm.describe()
+    assert "permutation" in desc_perm
+    assert "all_bijective=True" in desc_perm
+
+def test_permutation_bijections_have_full_cardinality():
+    f_perm = make_family("permutation", 16)
+    for op in range(f_perm.n_ops):
+        unique_outputs = set(f_perm.tables[op])
+        assert len(unique_outputs) == 16, f"Op {op} is not a full bijection over {16} states"
