@@ -43,6 +43,9 @@ class OpUnit(nn.Module):
     """Standard 2-layer MLP unit for state transformation."""
     def __init__(self, input_dim: int, output_dim: int, hidden: int):
         super().__init__()
+        self.input_dim = input_dim
+        self.output_dim = output_dim
+        self.hidden = hidden
         self.net = nn.Sequential(
             nn.Linear(input_dim, hidden),
             nn.Tanh(),
@@ -50,6 +53,7 @@ class OpUnit(nn.Module):
         )
 
     def forward(self, state: torch.Tensor) -> torch.Tensor:
+        """Apply 2-layer MLP non-linear mapping to input state vector."""
         return self.net(state)
 
 
