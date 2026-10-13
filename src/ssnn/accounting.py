@@ -7,6 +7,12 @@ def count_params(model: nn.Module) -> int:
     """Total trainable parameter count."""
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
 
+def count_trainable_vs_frozen_params(model: nn.Module) -> tuple[int, int]:
+    """Return tuple of (trainable_parameters, frozen_parameters)."""
+    trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    frozen = sum(p.numel() for p in model.parameters() if not p.requires_grad)
+    return trainable, frozen
+
 def count_active_params(model: nn.Module, kind: str) -> int:
     """Estimated active parameters per computation step."""
     if kind == "mlp":
