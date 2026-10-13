@@ -78,3 +78,12 @@ def test_family_get_signature_table():
     sig_table = f.get_signature_table()
     assert sig_table.shape == (f.n_ops, f.n_states)
     assert np.array_equal(sig_table, f.tables)
+
+def test_family_is_invertible():
+    f_aff = make_family("affine", 11)
+    for op in range(f_aff.n_ops):
+        assert f_aff.is_invertible(op) is True
+
+    f_perm = make_family("permutation", 16)
+    for op in range(f_perm.n_ops):
+        assert f_perm.is_invertible(op) is True
