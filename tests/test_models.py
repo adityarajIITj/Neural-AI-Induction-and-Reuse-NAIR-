@@ -86,3 +86,12 @@ def test_get_model_summary():
         assert summary["total_trainable_params"] > 0
         assert summary["n_ops"] == 12
         assert summary["n_states"] == 11
+
+def test_op_unit_repr():
+    from ssnn.models import OpUnit
+    unit = OpUnit(input_dim=23, output_dim=11, hidden=32)
+    rep = repr(unit)
+    assert "OpUnit" in rep
+    assert "input_dim=23" in rep
+    assert "output_dim=11" in rep
+    assert "hidden=32" in rep
