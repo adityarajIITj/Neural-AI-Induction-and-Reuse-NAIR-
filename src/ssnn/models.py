@@ -56,6 +56,9 @@ class OpUnit(nn.Module):
         """Apply 2-layer MLP non-linear mapping to input state vector."""
         return self.net(state)
 
+    def __repr__(self) -> str:
+        return f"OpUnit(input_dim={self.input_dim}, output_dim={self.output_dim}, hidden={self.hidden})"
+
 
 class HyperNetStep(nn.Module):
     """Prior-art baseline: HyperNetwork-generated dynamic linear step (Ha et al. 2016).
