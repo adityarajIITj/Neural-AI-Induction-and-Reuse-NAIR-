@@ -132,6 +132,10 @@ class Family:
             f"all_bijective={all_bijective})"
         )
 
+    def get_signature_table(self) -> np.ndarray:
+        """Return truth-table signatures for all primitive (depth-1) operations [n_ops, n_states]."""
+        return np.stack([np.array(self.signature((op,)), dtype=np.int64) for op in range(self.n_ops)])
+
 
 @dataclass
 class Split:
