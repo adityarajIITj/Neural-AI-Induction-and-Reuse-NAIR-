@@ -33,7 +33,7 @@ We evaluate six model families under transparent, documented capacity accounting
 ## 3. Evaluation Protocol & Quantitative Gates
 
 ### 3.1 Evaluation Slices
-For every run, models are evaluated on:
+For every run, models are evaluated on (see [`docs/glossary.md`](glossary.md) for formal definitions):
 1. `seen_depth3`: Depth-3 sequences composed of seen pairs.
 2. `unseen_pair_depth3`: Depth-3 sequences containing held-out pairs.
 3. `strict_functional_holdout`: Depth-3 sequences containing held-out pairs whose mathematical truth table was **strictly absent from the training set**.
