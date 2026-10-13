@@ -72,3 +72,9 @@ def test_permutation_bijections_have_full_cardinality():
     for op in range(f_perm.n_ops):
         unique_outputs = set(f_perm.tables[op])
         assert len(unique_outputs) == 16, f"Op {op} is not a full bijection over {16} states"
+
+def test_family_get_signature_table():
+    f = make_family("affine", 11)
+    sig_table = f.get_signature_table()
+    assert sig_table.shape == (f.n_ops, f.n_states)
+    assert np.array_equal(sig_table, f.tables)
