@@ -31,3 +31,18 @@ def test_inference_flops_matches_forward_flops():
     inf = estimate_inference_flops(m, batch_size=8, task_depth=4, kind="shared")
     assert fwd == inf
     assert inf > 0
+
+def test_count_trainable_vs_frozen_params():
+    from ssnn.accounting import count_trainable_vs_frozen_params
+    m = build_model("mlp", 12, 11, hidden=16)
+    trainable_init, frozen_init = count_trainable_vs_frozen_params(m)
+    assert trainable_init > 0
+    assert frozen_init == 0
+
+    for p in m.parameters():
+        p.requires_grad = False
+        break
+
+    trainable_post, frozen_post = count_trainable_vs_frozen_params(m)
+    assert frozen_post > 0
+    assert trainable_post + frozen_post == trainable_init
