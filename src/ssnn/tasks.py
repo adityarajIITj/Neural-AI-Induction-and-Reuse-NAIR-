@@ -136,6 +136,12 @@ class Family:
         """Return truth-table signatures for all primitive (depth-1) operations [n_ops, n_states]."""
         return np.stack([np.array(self.signature((op,)), dtype=np.int64) for op in range(self.n_ops)])
 
+    def is_invertible(self, op_idx: int) -> bool:
+        """Check whether operation op_idx is an invertible bijection over the state space."""
+        if op_idx < 0 or op_idx >= self.n_ops:
+            raise ValueError(f"Invalid op_idx {op_idx}")
+        return len(np.unique(self.tables[op_idx])) == self.n_states
+
 
 @dataclass
 class Split:
