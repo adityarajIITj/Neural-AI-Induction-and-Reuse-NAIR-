@@ -96,6 +96,7 @@ Empirical pilot results across 3 random seeds ($S \in \{0, 1, 2\}$) for 500 opti
 
 ## 7. Project Documentation
 
+- [`docs/architecture.md`](docs/architecture.md): High-level system architecture and pipeline flow.
 - [`docs/task_generator_validation.md`](docs/task_generator_validation.md): Mathematical proofs, collision rates, and leakage audit.
 - [`docs/experimental_protocol.md`](docs/experimental_protocol.md): Pre-registered success criteria and evaluation gates.
 - [`docs/novelty_matrix.md`](docs/novelty_matrix.md): Mechanism-level comparison to prior art (NMN, HyperNetworks, Soft Modular Networks, DreamCoder).
