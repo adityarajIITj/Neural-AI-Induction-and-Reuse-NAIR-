@@ -33,3 +33,10 @@ def test_evaluate_detailed_metrics_structure():
     assert "total_programs" in res
     assert 0.0 <= res["example_accuracy"] <= 1.0
     assert 0.0 <= res["program_exact_accuracy"] <= 1.0
+
+def test_format_seconds():
+    from ssnn.train import format_seconds
+    assert "s" in format_seconds(12.34)
+    assert "m" in format_seconds(125.0)
+    assert format_seconds(45.0) == "45.00s"
+    assert format_seconds(65.0) == "1m 5.0s"
