@@ -130,3 +130,12 @@ def set_seed(seed: int) -> None:
     torch.manual_seed(seed)
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(seed)
+
+
+def format_seconds(seconds: float) -> str:
+    """Format elapsed seconds into a human-friendly string (e.g. '1m 23s' or '4.52s')."""
+    if seconds < 60:
+        return f"{seconds:.2f}s"
+    minutes = int(seconds // 60)
+    rem = seconds % 60
+    return f"{minutes}m {rem:.1f}s"
